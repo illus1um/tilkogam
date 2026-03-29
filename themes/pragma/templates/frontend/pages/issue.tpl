@@ -16,8 +16,8 @@
  *}
 {include file="frontend/components/header.tpl" pageTitleTranslated=$issueIdentification}
 
-<main class="container main__content" id="main">
-	<section class="issue">
+<main class="container main__content page-issue" id="main">
+	<section class="issue issue-page-shell">
 
 		{call_hook name="Templates::Index::journal"}
 

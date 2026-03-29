@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/pages/userLogin.tpl
  *
  * Copyright (c) 2014-2024 Simon Fraser University
@@ -6,33 +6,32 @@
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * User login form.
- *
  *}
 {include file="frontend/components/header.tpl" pageTitle="user.login"}
 
-<main class="container main__content" id="main">
-	<div class="row">
-		<div class="offset-md-1 col-md-10 offset-lg-2 col-lg-8">
-			<header class="main__header">
-				<h1 class="main__title">
-					<span>{translate key="user.login"}</span>
-				</h1>
-			</header>
+<main class="container main__content page-auth page-auth--login" id="main">
+	<div class="auth-layout card-shell">
+		<section class="auth-layout__intro">
+			<p class="eyebrow">{$displayPageHeaderTitle|escape}</p>
+			<h1 class="main__title">{translate key="user.login"}</h1>
+			<p>{translate key="about.submissions"}</p>
+			<ul class="auth-layout__bullets">
+				<li>{translate key="about.submissions"}</li>
+				<li>{translate key="journal.currentIssue"}</li>
+				<li>{translate key="archive.archives"}</li>
+			</ul>
+		</section>
 
-			{* A login message may be displayed if the user was redireceted to the
-			   login page from another request. Examples include if login is required
-			   before dowloading a file. *}
+		<section class="auth-layout__form">
 			{if $loginMessage}
-				<p>
-					{translate key=$loginMessage}
-				</p>
+				<p class="auth-layout__message">{translate key=$loginMessage}</p>
 			{/if}
 
 			<form id="login" method="post" action="{$loginUrl}">
 				{csrf}
 
 				{if $error}
-					{translate key=$error reason=$reason}
+					<p class="auth-layout__error">{translate key=$error reason=$reason}</p>
 				{/if}
 
 				<input type="hidden" name="source" value="{$source|strip_unsafe_html|escape}"/>
@@ -42,9 +41,7 @@
 						<label for="username">
 							{translate key="user.username"}
 							<span class="required">*</span>
-							<span class="visually-hidden">
-								{translate key="common.required"}
-							</span>
+							<span class="visually-hidden">{translate key="common.required"}</span>
 						</label>
 						<input class="form-control" type="text" name="username" id="username" value="{$username|default:""|escape}" maxlength="32" required>
 					</div>
@@ -53,9 +50,7 @@
 						<label for="password">
 							{translate key="user.password"}
 							<span class="required">*</span>
-							<span class="visually-hidden">
-								{translate key="common.required"}
-							</span>
+							<span class="visually-hidden">{translate key="common.required"}</span>
 						</label>
 						<input class="form-control" type="password" name="password" id="password" value="{$password|default:""|escape}" password="true" maxlength="32" required>
 
@@ -67,39 +62,30 @@
 						</div>
 					</div>
 
-					{* recaptcha spam blocker *}
 					{if $recaptchaPublicKey}
 						<fieldset class="recaptcha_wrapper">
 							<div class="fields">
 								<div class="recaptcha">
-									<div class="g-recaptcha" data-sitekey="{$recaptchaPublicKey|escape}">
-									</div><label for="g-recaptcha-response" style="display:none;" hidden>Recaptcha response</label>
+									<div class="g-recaptcha" data-sitekey="{$recaptchaPublicKey|escape}"></div><label for="g-recaptcha-response" style="display:none;" hidden>Recaptcha response</label>
 								</div>
 							</div>
 						</fieldset>
 					{/if}
 
-					<div class="form-group">
-						<button class="btn btn-primary" type="submit">
-							{translate key="user.login"}
-						</button>
+					<div class="form-group auth-form__actions">
+						<button class="btn btn-primary" type="submit">{translate key="user.login"}</button>
 
 						{if !$disableUserReg}
 							{capture assign="registerUrl"}{url page="user" op="register" source=$source}{/capture}
-							<a href="{$registerUrl}" class="btn btn-secondary">
-								{translate key="user.login.registerNewAccount"}
-							</a>
+							<a href="{$registerUrl}" class="btn btn-secondary">{translate key="user.login.registerNewAccount"}</a>
 						{/if}
 
-						<br><br>
-						<a href="{url page="login" op="lostPassword"}">
-							{translate key="user.login.forgotPassword"}
-						</a>
+						<a class="auth-form__forgot" href="{url page="login" op="lostPassword"}">{translate key="user.login.forgotPassword"}</a>
 					</div>
 				</fieldset>
 			</form>
-		</div>
-	</div><!-- .row -->
+		</section>
+	</div>
 </main>
 
 {include file="frontend/components/footer.tpl"}

@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/components/footer.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
@@ -12,22 +12,23 @@
  *       sidebars have been configured for the site.
  *}
 
-<footer class="main-footer">
+<footer class="main-footer" id="pragma_content_footer">
 	<div class="container">
 		{if $hasSidebar}
-			<div class="row" role="complementary">
+			<div class="main-footer__sidebar" role="complementary">
 				{call_hook name="Templates::Common::Sidebar"}
 			</div>
-			<hr>
 		{/if}
-		<div class="row main-footer__block">
-			{if $pageFooter}
-				<div class="col-md-8">
+
+		<div class="main-footer__content">
+			<div class="main-footer__primary">
+				{if $pageFooter}
 					{$pageFooter}
-				</div>
-			{/if}
-			<div class="col-2 col-sm-1 offset-10 offset-sm-11" role="complementary">
-				<a href="{url page="about" op="aboutThisPublishingSystem"}">
+				{/if}
+			</div>
+
+			<div class="main-footer__secondary" role="complementary">
+				<a class="main-footer__ojs-link" href="{url page="about" op="aboutThisPublishingSystem"}">
 					<img class="img-fluid" alt="{translate key="about.aboutThisPublishingSystem"}" src="{$baseUrl}/{$brandImage}">
 				</a>
 			</div>

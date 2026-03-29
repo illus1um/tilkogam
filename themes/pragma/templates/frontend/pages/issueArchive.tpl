@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/pages/issueArchive.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
@@ -23,50 +23,47 @@
 {/capture}
 {include file="frontend/components/header.tpl" pageTitleTranslated=$pageTitle}
 
-<main class="container main__content" id="main">
-	<header class="main__header">
+<main class="container main__content page-archive" id="main">
+	<header class="main__header archive-header card-shell">
+		<p class="eyebrow">{translate key="archive.archives"}</p>
 		<h1 class="main__title">
 			<span>{$pageTitle|escape}</span>
 		</h1>
+		<p class="archive-header__summary">{translate key="archive.archives"} &middot; {if $total}{$total}{else}0{/if}</p>
 	</header>
 
-	<div class="row">
-
-		{* No issues have been published *}
-		{if empty($issues)}
-			<div class="offset-md-1 col-md-10 offset-lg-2 col-lg-8">
-				<p>{translate key="current.noCurrentIssueDesc"}</p>
-			</div>
-
-		{* List issues *}
-		{else}
+	{if empty($issues)}
+		<div class="card-shell archive-empty-state">
+			<p>{translate key="current.noCurrentIssueDesc"}</p>
+		</div>
+	{else}
+		<div class="row archive-grid">
 			{foreach from=$issues item="issue"}
-				<article class="col-md-3 col-lg-2 archived-issue">
+				<article class="col-sm-6 col-lg-4 archived-issue">
 					{include file="frontend/objects/issue_summary.tpl"}
 				</article>
 			{/foreach}
+		</div>
 
-			{* Pagination *}
-			<div class="col-12 issue__pagination">
-				{if $prevPage > 1}
-					{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive" path=$prevPage}{/capture}
-				{elseif $prevPage === 1}
-					{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive"}{/capture}
-				{/if}
-				{if $nextPage}
-					{capture assign=nextUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive" path=$nextPage}{/capture}
-				{/if}
-				{include
-					file="frontend/components/pagination.tpl"
-					prevUrl=$prevUrl
-					nextUrl=$nextUrl
-					showingStart=$showingStart
-					showingEnd=$showingEnd
-					total=$total
-				}
-			</div>
-		{/if}
-	</div><!-- .row -->
+		<div class="issue__pagination archive-pagination">
+			{if $prevPage > 1}
+				{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive" path=$prevPage}{/capture}
+			{elseif $prevPage === 1}
+				{capture assign=prevUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive"}{/capture}
+			{/if}
+			{if $nextPage}
+				{capture assign=nextUrl}{url router=$smarty.const.ROUTE_PAGE page="issue" op="archive" path=$nextPage}{/capture}
+			{/if}
+			{include
+				file="frontend/components/pagination.tpl"
+				prevUrl=$prevUrl
+				nextUrl=$nextUrl
+				showingStart=$showingStart
+				showingEnd=$showingEnd
+				total=$total
+			}
+		</div>
+	{/if}
 </main>
 
 {include file="frontend/components/footer.tpl"}

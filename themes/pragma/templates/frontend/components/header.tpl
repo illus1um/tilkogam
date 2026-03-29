@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/components/header.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
@@ -29,62 +29,62 @@
 <body class="page_{$requestedPage|escape|default:"index"} op_{$requestedOp|escape|default:"index"}{if $showingLogo} has_site_logo{/if}"
       dir="{$currentLocaleLangDir|escape|default:"ltr"}">
 
-	<div>
+	<div class="a11y-skips">
 		<a class="visually-hidden" href="#pragma_content_header">{translate key="navigation.skip.nav"}</a>
 		<a class="visually-hidden" href="#main">{translate key="navigation.skip.main"}</a>
 		<a class="visually-hidden" href="#pragma_content_footer">{translate key="navigation.skip.footer"}</a>
 	</div>
 
 	<header class="container-fluid main-header" id="pragma_content_header">
-		<nav class="main-header__admin main-header__admin{if $localeShow}_locale-enabled{else}_locale-disabled{/if}">
-
+		<div class="main-header__glow" aria-hidden="true"></div>
+		<div class="container main-header__frame">
 			{* User navigation *}
 			{capture assign="userMenu"}
 				{load_menu name="user" id="navigationUser" ulClass="pkp_navigation_user" liClass="profile"}
 			{/capture}
 
-			{* language toggle block *}
-			{if $localeShow}
-				{include file="frontend/components/languageSwitcher.tpl" id="languageNav"}
-			{/if}
+			<div class="main-header__topline">
+				{if $requestedOp == 'index'}
+					<h1 class="main-menu__title main-header__title">
+				{else}
+					<div class="main-menu__title main-header__title">
+				{/if}
 
-			{if !empty(trim($userMenu))}
-				<h2 class="visually-hidden">{translate key="plugins.themes.pragma.adminMenu"}</h2>
-				{$userMenu}
-			{/if}
+				{capture assign="homeUrl"}
+					{url page="index" router=$smarty.const.ROUTE_PAGE}
+				{/capture}
+				{if $displayPageHeaderLogo}
+					<a href="{$homeUrl}" class="main-header__brand-link">
+						<img src="{$publicFilesDir}/{$displayPageHeaderLogo.uploadName|escape:"url"}" width="{$displayPageHeaderLogo.width|escape}" height="{$displayPageHeaderLogo.height|escape}" {if $displayPageHeaderLogo.altText != ''}alt="{$displayPageHeaderLogo.altText|escape}"{else}alt="{translate key="common.pageHeaderLogo.altText"}"{/if}
+						class="img-fluid"/>
+					</a>
+				{elseif $displayPageHeaderTitle}
+					<a href="{$homeUrl}" class="main-header__brand-link">
+						<span>{$displayPageHeaderTitle|escape}</span>
+					</a>
+				{else}
+					<a href="{$homeUrl}" class="main-header__brand-link">
+						<img src="{$baseUrl}/templates/images/structure/logo.png" alt="{$applicationName|escape}" title="{$applicationName|escape}" width="180" height="90" class="img-fluid"/>
+					</a>
+				{/if}
 
-		</nav>
+				{if $requestedOp == 'index'}
+					</h1>
+				{else}
+					</div>
+				{/if}
 
-		<nav class="navbar navbar-expand-lg main-menu">
-			{if $requestedOp == 'index'}
-				<h1 class="main-menu__title">
-			{else}
-				<div class="main-menu__title">
-			{/if}
+				<nav class="main-header__admin main-header__admin{if $localeShow}_locale-enabled{else}_locale-disabled{/if}">
+					{if $localeShow}
+						{include file="frontend/components/languageSwitcher.tpl" id="languageNav"}
+					{/if}
 
-			{capture assign="homeUrl"}
-				{url page="index" router=$smarty.const.ROUTE_PAGE}
-			{/capture}
-			{if $displayPageHeaderLogo}
-				<a href="{$homeUrl}">
-					<img src="{$publicFilesDir}/{$displayPageHeaderLogo.uploadName|escape:"url"}" width="{$displayPageHeaderLogo.width|escape}" height="{$displayPageHeaderLogo.height|escape}" {if $displayPageHeaderLogo.altText != ''}alt="{$displayPageHeaderLogo.altText|escape}"{else}alt="{translate key="common.pageHeaderLogo.altText"}"{/if}
-					class="img-fluid"/>
-				</a>
-			{elseif $displayPageHeaderTitle}
-				<a href="{$homeUrl}">
-					<span>{$displayPageHeaderTitle|escape}</span>
-				</a>
-			{else}
-				<a href="{$homeUrl}">
-					<img src="{$baseUrl}/templates/images/structure/logo.png" alt="{$applicationName|escape}" title="{$applicationName|escape}" width="180" height="90" class="img-fluid"/>
-				</a>
-			{/if}
-
-			{if $requestedOp == 'index'}
-				</h1>
-			{else}
-				</div>
-			{/if}
+					{if !empty(trim($userMenu))}
+						<h2 class="visually-hidden">User menu</h2>
+						{$userMenu}
+					{/if}
+				</nav>
+			</div>
 
 			{* Primary navigation *}
 			{capture assign="primaryMenu"}
@@ -92,17 +92,19 @@
 			{/capture}
 
 			{if !empty(trim($primaryMenu)) || $currentContext}
-				<button class="navbar-toggler hamburger" data-bs-target="#mainMenu" data-bs-toggle="collapse"
+				<nav class="navbar navbar-expand-lg main-menu">
+					<button class="navbar-toggler hamburger" data-bs-target="#mainMenu" data-bs-toggle="collapse"
 						type="button"
 						aria-label="Menu" aria-controls="navigation">
-					<span class="hamburger__wrapper">
-						<span class="hamburger__icon"></span>
-					</span>
-				</button>
+						<span class="hamburger__wrapper">
+							<span class="hamburger__icon"></span>
+						</span>
+					</button>
 
-				<div class="collapse navbar-collapse main-menu__nav" id="mainMenu">
-					{$primaryMenu}
-				</div>
+					<div class="collapse navbar-collapse main-menu__nav" id="mainMenu">
+						{$primaryMenu}
+					</div>
+				</nav>
 			{/if}
-		</nav>
+		</div>
 	</header>

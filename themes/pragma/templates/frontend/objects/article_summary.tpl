@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/objects/article_summary.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
@@ -22,20 +22,21 @@
 	{assign var="showAuthor" value=true}
 {/if}
 
-<article class="row article">
-	<div class="col-sm-{if $requestedPage == "catalog"}12{else}8{/if}">
+<article class="article">
+	<div class="article__main">
 		<h4 class="article__title">
 			<a {if $journal}href="{url journal=$journal->getPath() page="article" op="view" path=$articlePath}"{else}href="{url page="article" op="view" path=$articlePath}"{/if}>
 				{$publication->getLocalizedFullTitle(null, 'html')|strip_unsafe_html}
 			</a>
 		</h4>
 		{if $showAuthor}
-			<p class="metadata">{$publication->getAuthorString($authorUserGroups)|escape}</p>
+			<p class="article__authors">{$publication->getAuthorString($authorUserGroups)|escape}</p>
 		{/if}
 		{call_hook name="Templates::Issue::Issue::Article"}
 	</div>
-	<div class="col-sm-4">
-		{if !$hideGalleys}
+
+	{if !$hideGalleys}
+		<div class="article__galleys">
 			{foreach from=$article->getGalleys() item=galley}
 				{if $primaryGenreIds}
 					{assign var="file" value=$galley->getFile()}
@@ -49,6 +50,6 @@
 				{/if}
 				{include file="frontend/objects/galley_link.tpl" parent=$article publication=$publication hasAccess=$hasArticleAccess purchaseFee=$currentJournal->getSetting('purchaseArticleFee') purchaseCurrency=$currentJournal->getSetting('currency')}
 			{/foreach}
-		{/if}
-	</div>
+		</div>
+	{/if}
 </article>

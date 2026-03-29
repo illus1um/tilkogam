@@ -1,4 +1,4 @@
-{**
+﻿{**
  * templates/frontend/objects/issue_summary.tpl
  *
  * Copyright (c) 2014-2020 Simon Fraser University
@@ -10,30 +10,34 @@
  * @uses $issue Issue The issue
  *}
 {if $issue->getShowTitle()}
-{assign var=issueTitle value=$issue->getLocalizedTitle()}
+	{assign var=issueTitle value=$issue->getLocalizedTitle()}
 {/if}
 {assign var=issueSeries value=$issue->getIssueSeries()}
 {assign var=issueCover value=$issue->getLocalizedCoverImageUrl()}
+{capture assign="issueViewUrl"}{url op="view" path=$issue->getBestIssueId()}{/capture}
 
 {if $issueCover}
-	<a class="archived-issue__link" href="{url op="view" path=$issue->getBestIssueId()}">
+	<a class="archived-issue__cover" href="{$issueViewUrl}">
 		<img src="{$issueCover|escape}" alt="{$issue->getLocalizedCoverImageAltText()|escape|default:''}" class="img-fluid">
 	</a>
 {/if}
 
-<a class="archived-issue__link" href="{url op="view" path=$issue->getBestIssueId()}">
-	<h3 class="archived-issue__title">
-		{if $issueTitle}
-			{$issueTitle|escape}
-		{else}
-			{$issueSeries|escape}
-		{/if}
-	</h3>
-</a>
-{if $issueTitle && $issueSeries}
-	<div class="archived-issue__series">
-		{$issueSeries|escape}
-	</div>
-{/if}
+<div class="archived-issue__body">
+	<p class="metadata archived-issue__date">{$issue->getDatePublished()|date_format:$dateFormatLong}</p>
 
-<p class="metadata"><small>{$issue->getDatePublished()|date_format:$dateFormatLong}</small></p>
+	<a class="archived-issue__link" href="{$issueViewUrl}">
+		<h3 class="archived-issue__title">
+			{if $issueTitle}
+				{$issueTitle|escape}
+			{else}
+				{$issueSeries|escape}
+			{/if}
+		</h3>
+	</a>
+
+	{if $issueTitle && $issueSeries}
+		<p class="archived-issue__series">{$issueSeries|escape}</p>
+	{/if}
+
+	<a class="archived-issue__cta" href="{$issueViewUrl}">{translate key="common.more"} &rarr;</a>
+</div>
