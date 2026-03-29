@@ -8,6 +8,11 @@
   --bs-body-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
 }
 
+html,
+body {
+  color-scheme: light;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
   -webkit-font-smoothing: antialiased;
@@ -651,12 +656,16 @@ fieldset {
 .modal-content {
   border: none !important;
   border-radius: 20px !important;
+  background-color: #ffffff !important;
+  color: #1d1d1f !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 0.5px rgba(0, 0, 0, 0.05) !important;
   overflow: hidden;
 }
 
 .modal-body {
   padding: 36px 32px !important;
+  background-color: #ffffff !important;
+  color: #1d1d1f !important;
 }
 
 .modal-content .close,
@@ -730,6 +739,21 @@ fieldset {
 
 #loginModal fieldset .form-group:last-child a:not(.btn):hover {
   color: #0071e3 !important;
+}
+
+#loginModal label,
+#loginModal .form-label,
+#loginModal .form-check-label,
+#loginModal a:not(.btn) {
+  color: #1d1d1f !important;
+}
+
+#loginModal input.form-control,
+#loginModal input[type="text"],
+#loginModal input[type="password"] {
+  background-color: #ffffff !important;
+  color: #1d1d1f !important;
+  border: 1px solid #d2d2d7 !important;
 }
 
 /* ===== Standalone login page ===== */
