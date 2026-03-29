@@ -1,77 +1,68 @@
-# OJS Journal — Handoff Package
+﻿# OJS Handoff: ТІЛ ЖӘНЕ ҚОҒАМ (TIL ZHANE KOGAM)
 
-Полный прод-бэкап Open Journal Systems (OJS 3.4.0) для journal.adapto.kz.
-Дата снятия дампа: **2026-03-17**.
+Репозиторий для локального запуска OJS 3.4 и базовой реализации журнала `ТІЛ ЖӘНЕ ҚОҒАМ`.
 
-## Что внутри
+## Что уже реализовано
 
+- Базовый запуск OJS + MariaDB через `docker compose`
+- В образ добавлена тема `pragma` (чтобы стиль не исчезал после пересборки)
+- SQL bootstrap для журнала в 3 языках: `kk`, `ru`, `en`
+- Настроены ключевые параметры журнала (локали, разделы, контакты, workflow)
+- Скрипты восстановления с безопасным импортом БД в `utf8mb4` (без проблемы `????`)
+
+## Важные папки/файлы
+
+- `docker-compose.yml` — контейнеры OJS и MariaDB
+- `Dockerfile` — образ OJS + bundled тема `pragma`
+- `sql/bootstrap_til_kogam.sql` — стартовая конфигурация журнала
+- `scripts/restore_local.ps1` — полный restore для Windows/PowerShell
+- `restore.sh` — полный restore для Linux/macOS (bash)
+- `themes/pragma/` — тема OJS, включена в репозиторий
+
+## Перед запуском
+
+Для полного восстановления нужны локальные backup-файлы (они игнорируются git):
+
+- `data/ojs_dump.sql`
+- `data/ojs_private_files.tar.gz`
+- `data/ojs_public_files.tar.gz`
+- `config/ojs.config.local.inc.php`
+
+## Быстрый старт (Windows, рекомендовано)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\restore_local.ps1
 ```
-├── Dockerfile              # OJS image (pkpofficial/ojs:stable-3_4_0 + mod)
-├── docker-compose.yml      # OJS + MariaDB 10.11
-├── config/
-│   └── ojs.config.inc.php  # Конфиг OJS (БД, email, security)
-├── custom.css              # Кастомные стили журнала
-├── setup_content.sql       # Начальный контент (редколлегия, about, privacy)
-├── ADMIN_CREDENTIALS.md    # Логины и пароли
-├── data/
-│   ├── ojs_dump.sql        # Полный дамп MariaDB (все таблицы, данные, юзеры)
-│   ├── ojs_private_files.tar.gz  # /var/www/files (загруженные статьи, рецензии)
-│   └── ojs_public_files.tar.gz   # /var/www/html/public (публичные файлы)
-```
 
-## Быстрый запуск (с нуля)
-
-### 1. Поднять контейнеры
+## Быстрый старт (Linux/macOS)
 
 ```bash
-docker compose up -d --build
+chmod +x ./restore.sh
+./restore.sh
 ```
 
-Дождаться пока MariaDB станет healthy:
-```bash
-docker compose ps   # db должен быть "healthy"
+После завершения:
+
+- URL: `http://localhost:8081/journal`
+- Логин: `admin`
+- Пароль: `AdApTo_J0urnal_2026!`
+
+## Применить только bootstrap (без полного restore)
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\apply_til_kogam_bootstrap.ps1
 ```
 
-### 2. Залить дамп БД
+Это обновит настройки журнала (`name/about/sections/locales/footer` и т.д.) в существующей базе.
 
-```bash
-docker exec -i ojs-db mariadb -u ojs -pojs_secure_pass_2026 ojs < data/ojs_dump.sql
-```
+## Примечания по DOI
 
-### 3. Восстановить файлы
+В текущем MVP DOI выключен (`enableDois=0`).
+Включение DOI возможно позже после выбора регистратора (например Crossref/DataCite), оплаты и настройки плагинов/депозитов.
 
-Приватные файлы (статьи, рецензии):
-```bash
-docker exec ojs-journal sh -c 'rm -rf /var/www/files/*'
-docker cp data/ojs_private_files.tar.gz ojs-journal:/tmp/
-docker exec ojs-journal sh -c 'cd /var/www/files && tar xzf /tmp/ojs_private_files.tar.gz && rm /tmp/ojs_private_files.tar.gz'
-```
+## Текущий статус MVP
 
-Публичные файлы:
-```bash
-docker cp data/ojs_public_files.tar.gz ojs-journal:/tmp/
-docker exec ojs-journal sh -c 'cd /var/www/html/public && tar xzf /tmp/ojs_public_files.tar.gz && rm /tmp/ojs_public_files.tar.gz'
-```
-
-### 4. Скопировать конфиг
-
-```bash
-docker cp config/ojs.config.inc.php ojs-journal:/var/www/html/config.inc.php
-```
-
-### 5. Проверить
-
-Открыть http://localhost:8081 — должен загрузиться OJS.
-
-## Если ставишь на свой домен
-
-1. В `config/ojs.config.inc.php` поменяй `base_url` на свой домен
-2. В `config/ojs.config.inc.php` поменяй `allowed_hosts`
-3. Если без HTTPS — убери `force_ssl = On` и `force_login_ssl = On`
-4. В `docker-compose.yml` можно сменить порт (сейчас `8081:80`)
-
-## Пароли
-
-См. `ADMIN_CREDENTIALS.md`. После развёртывания **смени пароли**:
-- Админ OJS: через веб-интерфейс (Profile → Change Password)
-- БД: в `docker-compose.yml` и `config/ojs.config.inc.php`
+- Рабочая локальная версия журнала на OJS
+- 3 языка интерфейса/контента
+- Структура разделов и редакционные настройки под `ТІЛ ЖӘНЕ ҚОҒАМ`
+- Основа для дальнейшего наполнения выпусками и статьями
