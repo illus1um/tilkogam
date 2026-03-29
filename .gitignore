@@ -1,0 +1,27 @@
+# Secrets and credentials
+ADMIN_CREDENTIALS.md
+config/ojs.config.inc.php
+config/ojs.config.local.inc.php
+ojs-source/config.inc.php
+.env
+.env.*
+
+# Large handoff payloads / binaries
+data/ojs_dump.sql
+data/*.tar.gz
+all_volumes/
+*.pdf
+
+# Upstream/source snapshots and duplicate unpacks
+ojs-source/
+ojs-journal-handoff(1)/
+
+# Local scratch and tool folders
+_tmp/
+.claude/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp

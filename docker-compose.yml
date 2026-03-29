@@ -1,0 +1,52 @@
+services:
+  ojs:
+    build: .
+    image: ojs-journal:latest
+    container_name: ojs-journal
+    restart: always
+    ports:
+      - "8081:80"
+    volumes:
+      - ojs_private:/var/www/files
+      - ojs_public:/var/www/html/public
+      - ojs_db_data:/var/www/html/dbFiles
+    environment:
+      - OJS_DB_HOST=db
+      - OJS_DB_USER=ojs
+      - OJS_DB_PASSWORD=ojs_secure_pass_2026
+      - OJS_DB_NAME=ojs
+      - OJS_CLI_INSTALL=0
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ojs-net
+
+  db:
+    image: mariadb:10.11
+    container_name: ojs-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_secure_2026
+      - MYSQL_DATABASE=ojs
+      - MYSQL_USER=ojs
+      - MYSQL_PASSWORD=ojs_secure_pass_2026
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ojs-net
+
+volumes:
+  ojs_private:
+  ojs_public:
+  ojs_db_data:
+  db_data:
+
+networks:
+  ojs-net:
+    driver: bridge
