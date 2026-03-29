@@ -41,7 +41,7 @@
 						{$journalDescription|strip_unsafe_html|truncate:450}
 						<p>
 							{capture assign="aboutPageUrl"}{url router=$smarty.const.ROUTE_PAGE page="about"}{/capture}
-							<a href="{$aboutPageUrl}" class="btn btn-primary">{translate key="plugins.themes.pragma.more-info"}</a>
+							<a href="{$aboutPageUrl}" class="btn btn-primary">{translate key="common.more"}</a>
 						</p>
 					</article>
 				</section>

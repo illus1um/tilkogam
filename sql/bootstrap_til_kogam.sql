@@ -76,7 +76,7 @@ ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
 -- Keep styleSheet only if present in public files
 INSERT INTO journal_settings (journal_id, locale, setting_name, setting_value)
 VALUES
-  (1, '', 'styleSheet', '{"name":"custom.css","uploadName":"custom.css","dateUploaded":"2026-02-11 12:00:00"}')
+  (1, '', 'styleSheet', CONCAT('{"name":"custom.css","uploadName":"custom.css","dateUploaded":"', DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), '"}'))
 ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value);
 
 -- -----------------------------
